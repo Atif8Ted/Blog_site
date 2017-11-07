@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from .models import Post, Comment
 from blog.forms import PostForm, CommentForm
+from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import (TemplateView, ListView,UpdateView, DetailView, CreateView)
+from django.views.generic import (TemplateView, DeleteView, ListView, UpdateView, DetailView, CreateView)
 
 
 class AboutView(TemplateView):
@@ -13,14 +14,14 @@ class PostListView(ListView):
     model = Post
 
     def get_queryset(self):
-        return Post.objects.filter(published_date__lte=timezone.now().order_by('-published_date')
+        return Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
 
 
 class PostDetailView(DetailView):
     model = Post
 
 
-class CreateView(LoginRequiredMixin, CreateView):
+class CreatePostView(LoginRequiredMixin, CreateView):
     login_url = '/login'
     redirect_field_name = 'blog/post_detail.html'
     form_class = PostForm
@@ -28,10 +29,23 @@ class CreateView(LoginRequiredMixin, CreateView):
     model = Post
 
 
-class PostUpdateView(LoginRequiredMixin,UpdateView):
+class PostUpdateView(LoginRequiredMixin, UpdateView):
     login_url = '/login'
     redirect_field_name = 'blog/post_detail.html'
     form_class = PostForm
 
     model = Post
 
+
+class PostDeleteView(LoginRequiredMixin, DeleteView):
+    model = Post
+    success_url = reverse_lazy('post_list')
+
+
+class DraftListView(LoginRequiredMixin, ListView):
+    login_url = '/login'
+    redirect_field_name = 'blog/post_list.html'
+    model = Post
+
+    def get_queryset(self):
+        return Post.objects.filter(published_date_isnull=True).order_by('created_date')
