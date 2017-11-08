@@ -71,3 +71,7 @@
   100%{filter:hue-rotate(360deg);}
 
 }
+
+body{
+  background: lightgoldenrodyellow;
+}
