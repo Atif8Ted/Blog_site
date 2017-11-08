@@ -20,9 +20,9 @@ Wednesday, 08. November 2017 07:32AM
 
 
 
-###
+
 **Requirements:**
-python3 
-django 
-django-bootstrap3
+- python3 
+- django 
+- django-bootstrap3
 
